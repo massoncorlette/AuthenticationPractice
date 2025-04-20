@@ -1,0 +1,14 @@
+{
+  "name": "authenticationpractice",
+  "version": "1.0.0",
+  "description": "Introduction to user authentication using passport.js middleware",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "massoncorlette",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0"
+  }
+}
