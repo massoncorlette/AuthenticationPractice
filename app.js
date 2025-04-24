@@ -6,6 +6,7 @@ const { Pool } = require("pg");
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
+const bcrypt = require("bcryptjs");
 const LocalStrategy = require('passport-local').Strategy;
 
 const pool = new Pool({
@@ -50,16 +51,15 @@ app.get("/log-out", (req, res, next) => {
 
 app.post("/sign-up", async (req, res, next) => {
   try {
-    await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
-      req.body.username,
-      req.body.password,
-    ]);
-    res.redirect("/");
-  } catch(err) {
-    return next(err);
-  }
-});
-
+   const hashedPassword = await bcrypt.hash(req.body.password, 10);
+   await pool.query("insert into users (username, password) values ($1, $2)", [req.body.username, hashedPassword]);
+   res.redirect("/");
+  } catch (error) {
+     console.error(error);
+     next(error);
+    }
+ });
+ 
 
 passport.use(
   new LocalStrategy(async (username, password, done) => {
@@ -95,9 +95,6 @@ passport.deserializeUser(async (id, done) => {
     done(err);
   }
 });
-
-
-
 
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
